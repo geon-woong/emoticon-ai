@@ -1,0 +1,47 @@
+[
+  {
+    "id": "couple",
+    "label": "커플",
+    "modifiers": ["100일 된", "콩깍지 씐", "권태기", "장거리"]
+  },
+  {
+    "id": "bestfriend",
+    "label": "베프",
+    "modifiers": ["10년지기", "찐친", "초딩 때부터"]
+  },
+  {
+    "id": "family",
+    "label": "가족",
+    "modifiers": ["대가족", "단란한", "북적이는"]
+  },
+  {
+    "id": "siblings",
+    "label": "형제자매",
+    "modifiers": ["티격태격", "쌍둥이", "막내"]
+  },
+  {
+    "id": "parent_child",
+    "label": "부모와 자녀",
+    "modifiers": ["다정한", "투닥거리는", "사춘기"]
+  },
+  {
+    "id": "colleague",
+    "label": "직장 동료",
+    "modifiers": ["워라밸 챙기는", "동기", "절친 동료"]
+  },
+  {
+    "id": "single",
+    "label": "솔로",
+    "modifiers": ["모태", "n년차", "홀가분한", "연애 세포 사망"]
+  },
+  {
+    "id": "newlywed",
+    "label": "신혼부부",
+    "modifiers": ["깨가 쏟아지는", "꽁냥꽁냥", "1년차"]
+  },
+  {
+    "id": "pet_owner",
+    "label": "반려인",
+    "modifiers": ["집사", "댕댕이 바보", "고양이 집사"]
+  }
+]

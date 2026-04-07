@@ -1,0 +1,62 @@
+[
+  {
+    "id": "gaming",
+    "label": "게임",
+    "modifiers": ["밤샘", "랭커", "초보", "고인물"]
+  },
+  {
+    "id": "reading",
+    "label": "독서",
+    "modifiers": ["책벌레", "도서관 죽순이", "월 10권"]
+  },
+  {
+    "id": "cooking",
+    "label": "요리",
+    "modifiers": ["집밥 마스터", "베이킹 입문", "신메뉴 개발 중인"]
+  },
+  {
+    "id": "photo",
+    "label": "사진",
+    "modifiers": ["감성", "필름 카메라", "출사 다니는"]
+  },
+  {
+    "id": "drawing",
+    "label": "그림",
+    "modifiers": ["취미 작가", "낙서 장인", "디지털 입문"]
+  },
+  {
+    "id": "music",
+    "label": "음악",
+    "modifiers": ["덕질", "버스킹 다니는", "플레이리스트 마스터"]
+  },
+  {
+    "id": "kpop",
+    "label": "덕질",
+    "modifiers": ["10년차", "콘서트 정복", "굿즈 수집"]
+  },
+  {
+    "id": "travel",
+    "label": "여행",
+    "modifiers": ["배낭", "캠핑", "국내 일주", "해외"]
+  },
+  {
+    "id": "movie",
+    "label": "영화 감상",
+    "modifiers": ["주말마다", "감독판 정복", "리뷰 쓰는"]
+  },
+  {
+    "id": "shopping",
+    "label": "쇼핑",
+    "modifiers": ["택배 중독", "쇼핑 고수", "직구 마스터"]
+  },
+  {
+    "id": "homebody",
+    "label": "집콕",
+    "modifiers": ["집순이", "집돌이", "방구석 만렙"]
+  },
+  {
+    "id": "knit",
+    "label": "뜨개질",
+    "modifiers": ["인생 2막", "초보", "장인"]
+  }
+]

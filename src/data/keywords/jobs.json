@@ -1,0 +1,62 @@
+[
+  {
+    "id": "office_worker",
+    "label": "직장인",
+    "modifiers": ["열정 가득 사회 초년생", "야근에 찌든", "10년차 베테랑", "퇴사 꿈꾸는", "월요병 가득한"]
+  },
+  {
+    "id": "student",
+    "label": "학생",
+    "modifiers": ["벼락치기 단골", "전교 1등", "조별과제 짊어진", "시험 망친"]
+  },
+  {
+    "id": "emoticon_artist",
+    "label": "이모티콘 작가",
+    "modifiers": ["열정적인", "마감에 쫓기는", "데뷔 준비 중인", "꿈 많은"]
+  },
+  {
+    "id": "freelancer",
+    "label": "프리랜서",
+    "modifiers": ["방구석", "마감 임박", "n년차", "카페 출근하는"]
+  },
+  {
+    "id": "developer",
+    "label": "개발자",
+    "modifiers": ["버그 잡는", "야근하는", "주니어", "시니어"]
+  },
+  {
+    "id": "designer",
+    "label": "디자이너",
+    "modifiers": ["감각 충만한", "포토샵 마스터", "시안 무한 수정"]
+  },
+  {
+    "id": "barista",
+    "label": "바리스타",
+    "modifiers": ["주말 알바", "라떼아트 장인", "신메뉴 개발"]
+  },
+  {
+    "id": "teacher",
+    "label": "선생님",
+    "modifiers": ["열혈", "신규", "베테랑", "다정한"]
+  },
+  {
+    "id": "doctor",
+    "label": "의사",
+    "modifiers": ["인턴", "응급실", "친절한"]
+  },
+  {
+    "id": "housewife",
+    "label": "주부",
+    "modifiers": ["살림 만렙", "집순이", "n년차", "육아 중인"]
+  },
+  {
+    "id": "youtuber",
+    "label": "유튜버",
+    "modifiers": ["구독자 0명", "신입", "100만 도전 중인"]
+  },
+  {
+    "id": "soldier",
+    "label": "군인",
+    "modifiers": ["이등병", "병장", "전역 D-1"]
+  }
+]

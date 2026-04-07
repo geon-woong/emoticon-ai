@@ -1,0 +1,62 @@
+[
+  {
+    "id": "swimming",
+    "label": "수영",
+    "modifiers": ["8년차 고수", "초보", "새벽반", "물개"]
+  },
+  {
+    "id": "running",
+    "label": "러닝",
+    "modifiers": ["새벽", "마라톤 도전", "n km 러너"]
+  },
+  {
+    "id": "yoga",
+    "label": "요가",
+    "modifiers": ["초보", "강사 준비", "유연한"]
+  },
+  {
+    "id": "pilates",
+    "label": "필라테스",
+    "modifiers": ["입문", "n년차", "코어 만렙"]
+  },
+  {
+    "id": "gym",
+    "label": "헬스",
+    "modifiers": ["3대 500", "헬린이", "벌크업 중인"]
+  },
+  {
+    "id": "tennis",
+    "label": "테니스",
+    "modifiers": ["주말 동호회", "초보", "대회 준비 중인"]
+  },
+  {
+    "id": "golf",
+    "label": "골프",
+    "modifiers": ["입문자", "필드 데뷔", "스크린"]
+  },
+  {
+    "id": "climbing",
+    "label": "클라이밍",
+    "modifiers": ["주 3회", "초보", "고수"]
+  },
+  {
+    "id": "soccer",
+    "label": "축구",
+    "modifiers": ["조기축구회", "동네 손흥민", "주말마다"]
+  },
+  {
+    "id": "basketball",
+    "label": "농구",
+    "modifiers": ["코트 죽돌이", "3점 슈터", "동호회"]
+  },
+  {
+    "id": "cycling",
+    "label": "자전거",
+    "modifiers": ["라이딩 마니아", "한강 단골", "장거리"]
+  },
+  {
+    "id": "badminton",
+    "label": "배드민턴",
+    "modifiers": ["동호회 회장", "주 3회", "초보"]
+  }
+]

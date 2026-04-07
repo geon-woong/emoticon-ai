@@ -1,0 +1,14 @@
+[
+  { "id": "passionate", "label": "열정적인", "tone": "active" },
+  { "id": "cheerful", "label": "쾌활한", "tone": "active" },
+  { "id": "shy", "label": "수줍은", "tone": "calm" },
+  { "id": "lazy", "label": "게으른", "tone": "calm" },
+  { "id": "stubborn", "label": "고집 센", "tone": "active" },
+  { "id": "warm", "label": "따뜻한", "tone": "calm" },
+  { "id": "quirky", "label": "엉뚱한", "tone": "active" },
+  { "id": "calm", "label": "차분한", "tone": "calm" },
+  { "id": "sharp", "label": "까칠한", "tone": "active" },
+  { "id": "positive", "label": "긍정적인", "tone": "active" },
+  { "id": "sensitive", "label": "예민한", "tone": "calm" },
+  { "id": "carefree", "label": "느긋한", "tone": "calm" }
+]

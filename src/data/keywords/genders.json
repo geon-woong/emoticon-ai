@@ -1,0 +1,5 @@
+[
+  { "id": "female", "label": "여성" },
+  { "id": "male", "label": "남성" },
+  { "id": "neutral", "label": "성별 무관" }
+]

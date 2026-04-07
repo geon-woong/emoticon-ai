@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Gaegu:wght@700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-text: #4A3838;        /* 기본 텍스트 */
+  --color-brand-muted: #8A7878;       /* 보조 텍스트 */
+  --color-brand-selected: #E69600;    /* 선택 텍스트, 진한선 */
+  --color-brand-selected-bg: #FFF6D6; /* 선택 배경 */
+  --color-brand-btn1: #FBF0A6;        /* 버튼1 */
+  --color-brand-btn2: #F6C84C;        /* 버튼2 (강조) */
+  --color-brand-divider: #ECE7E0;     /* UI 구분선 */
+  --color-brand-bg: #FFFBF2;          /* 페이지 배경 */
+  --color-brand-card: #FFFFFF;        /* 카드 배경 */
+  --color-brand-accent: #FF8A5B;      /* 액센트 (이모티콘 톤) */
+
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-heading: 'Jua', sans-serif;
+  --font-handwriting: 'Gaegu', cursive;
+}
+
+html, body {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  font-family: 'Jua', system-ui, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
