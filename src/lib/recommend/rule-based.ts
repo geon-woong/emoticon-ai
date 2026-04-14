@@ -39,11 +39,13 @@ export function recommendConcepts(
   const perSubject = options.perSubject ?? 3;
   const rng = createSeededRng(options.seed ?? Date.now());
 
-  const subjects: ReadonlyArray<readonly [SubjectKey, string | null, KeywordItem[]]> = [
-    ['job', selection.job, data.jobs],
-    ['relationship', selection.relationship, data.relationships],
-    ['hobby', selection.hobby, data.hobbies],
-    ['sport', selection.sport, data.sports],
+  // 단일 선택 주제: job, relationship
+  // 복수 선택 주제: hobby(hobbies), sport(sports)
+  const subjects: ReadonlyArray<readonly [SubjectKey, string[], KeywordItem[]]> = [
+    ['job', selection.job ? [selection.job] : [], data.jobs],
+    ['relationship', selection.relationship ? [selection.relationship] : [], data.relationships],
+    ['hobby', selection.hobbies, data.hobbies],
+    ['sport', selection.sports, data.sports],
   ];
 
   const personalityItems = data.personalities.filter((p) =>
@@ -52,62 +54,77 @@ export function recommendConcepts(
 
   const result: RecommendResult = { bySubject: {} };
 
-  for (const [subjectKey, selectedId, pool] of subjects) {
-    if (!selectedId) continue;
-    const subjectItem = pool.find((p) => p.id === selectedId);
-    if (!subjectItem) continue;
+  for (const [subjectKey, selectedIds, pool] of subjects) {
+    if (selectedIds.length === 0) continue;
 
-    const fallbackPool = [
-      ...data.modifiers.skillLevel,
-      ...data.modifiers.intensity,
-    ];
-    const modifierPool =
-      subjectItem.modifiers && subjectItem.modifiers.length > 0
-        ? subjectItem.modifiers
-        : fallbackPool;
+    const allConcepts: ConceptSuggestion[] = [];
 
-    const concepts: ConceptSuggestion[] = [];
-    const used = new Set<string>();
-    const maxAttempts = perSubject * 8;
-    let attempts = 0;
+    for (const selectedId of selectedIds) {
+      const subjectItem = pool.find((p) => p.id === selectedId);
+      if (!subjectItem) continue;
 
-    while (concepts.length < perSubject && attempts < maxAttempts) {
-      attempts++;
+      const modifierPool =
+        subjectItem.modifiers && subjectItem.modifiers.length > 0
+          ? subjectItem.modifiers
+          : getToneFallbackPool(subjectItem.tone, data.modifiers);
 
-      const personality =
-        personalityItems.length > 0 ? pickOne(personalityItems, rng) : null;
-      const modifier = modifierPool.length > 0 ? pickOne(modifierPool, rng) : null;
+      const concepts: ConceptSuggestion[] = [];
+      const used = new Set<string>();
+      const maxAttempts = perSubject * 8;
+      let attempts = 0;
 
-      // 원칙 #3: personality 또는 modifier 중 적어도 하나는 있어야 한다.
-      if (!personality && !modifier) continue;
+      while (concepts.length < perSubject && attempts < maxAttempts) {
+        attempts++;
 
-      const text = composeText({
-        personalityLabel: personality?.label,
-        modifier: modifier ?? undefined,
-        subjectLabel: subjectItem.label,
-      });
+        const personality =
+          personalityItems.length > 0 ? pickOne(personalityItems, rng) : null;
+        const modifier = modifierPool.length > 0 ? pickOne(modifierPool, rng) : null;
 
-      const sig = `${personality?.id ?? ''}|${modifier ?? ''}|${subjectItem.id}`;
-      if (used.has(sig)) continue;
-      used.add(sig);
+        // 원칙 #3: personality 또는 modifier 중 적어도 하나는 있어야 한다.
+        if (!personality && !modifier) continue;
 
-      concepts.push({
-        id: hashString(sig),
-        subject: subjectKey,
-        text,
-        parts: {
+        const text = composeText({
           personalityLabel: personality?.label,
           modifier: modifier ?? undefined,
           subjectLabel: subjectItem.label,
-        },
-        source: 'rule',
-      });
+        });
+
+        const sig = `${personality?.id ?? ''}|${modifier ?? ''}|${subjectItem.id}`;
+        if (used.has(sig)) continue;
+        used.add(sig);
+
+        concepts.push({
+          id: hashString(sig),
+          subject: subjectKey,
+          text,
+          parts: {
+            personalityLabel: personality?.label,
+            modifier: modifier ?? undefined,
+            subjectLabel: subjectItem.label,
+          },
+          source: 'rule',
+        });
+      }
+
+      allConcepts.push(...concepts);
     }
 
-    result.bySubject[subjectKey] = concepts;
+    if (allConcepts.length > 0) {
+      result.bySubject[subjectKey] = allConcepts;
+    }
   }
 
   return result;
+}
+
+/**
+ * tone에 따라 전역 modifier fallback 풀을 선택한다.
+ * active → intensity, calm → context, 미지정 → skillLevel + intensity
+ */
+function getToneFallbackPool(tone: string | undefined, pools: ModifierPools): string[] {
+  if (tone === 'active') return pools.intensity;
+  if (tone === 'calm') return pools.context;
+  return [...pools.skillLevel, ...pools.intensity];
 }
 
 interface ComposeInput {

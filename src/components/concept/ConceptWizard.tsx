@@ -5,7 +5,7 @@ import { useConceptWizardStore, WIZARD_STEPS } from '@/stores/concept-wizard-sto
 import { KeywordGrid } from './KeywordGrid';
 import { WizardStepHeader } from './WizardStepHeader';
 import { WizardNav } from './WizardNav';
-import type { KeywordItem, WizardSelection, WizardStepId } from '@/types/concept';
+import type { KeywordItem, WizardStepId } from '@/types/concept';
 
 import ages from '@/data/keywords/ages.json';
 import genders from '@/data/keywords/genders.json';
@@ -14,6 +14,7 @@ import jobs from '@/data/keywords/jobs.json';
 import relationships from '@/data/keywords/relationships.json';
 import hobbies from '@/data/keywords/hobbies.json';
 import sports from '@/data/keywords/sports.json';
+import speechStyles from '@/data/keywords/speech-styles.json';
 
 const STEP_DATA: Record<WizardStepId, { items: KeywordItem[]; description: string }> = {
   age: { items: ages as KeywordItem[], description: '나이대를 골라주세요' },
@@ -24,20 +25,35 @@ const STEP_DATA: Record<WizardStepId, { items: KeywordItem[]; description: strin
   },
   job: { items: jobs as KeywordItem[], description: '직업을 골라주세요' },
   relationship: { items: relationships as KeywordItem[], description: '관계를 골라주세요' },
-  hobby: { items: hobbies as KeywordItem[], description: '취미를 골라주세요' },
-  sport: { items: sports as KeywordItem[], description: '운동을 골라주세요' },
+  hobby: {
+    items: hobbies as KeywordItem[],
+    description: '취미를 골라주세요 (여러 개 선택 가능)',
+  },
+  sport: {
+    items: sports as KeywordItem[],
+    description: '운동을 골라주세요 (여러 개 선택 가능)',
+  },
+  'speech-style': {
+    items: speechStyles as KeywordItem[],
+    description: '말투를 골라주세요',
+  },
 };
 
-const SINGLE_KEY_MAP: Record<
-  Exclude<WizardStepId, 'personality'>,
-  Exclude<keyof WizardSelection, 'personalities'>
-> = {
+type SingleStepId = 'age' | 'gender' | 'job' | 'relationship' | 'speech-style';
+type MultiStepId = 'personality' | 'hobby' | 'sport';
+
+const SINGLE_KEY_MAP: Record<SingleStepId, 'age' | 'gender' | 'job' | 'relationship' | 'speechStyle'> = {
   age: 'age',
   gender: 'gender',
   job: 'job',
   relationship: 'relationship',
-  hobby: 'hobby',
-  sport: 'sport',
+  'speech-style': 'speechStyle',
+};
+
+const MULTI_KEY_MAP: Record<MultiStepId, 'personalities' | 'hobbies' | 'sports'> = {
+  personality: 'personalities',
+  hobby: 'hobbies',
+  sport: 'sports',
 };
 
 export function ConceptWizard() {
@@ -47,31 +63,29 @@ export function ConceptWizard() {
   const next = useConceptWizardStore((s) => s.next);
   const prev = useConceptWizardStore((s) => s.prev);
   const setSingle = useConceptWizardStore((s) => s.setSingle);
-  const togglePersonality = useConceptWizardStore((s) => s.togglePersonality);
+  const toggleMulti = useConceptWizardStore((s) => s.toggleMulti);
 
   const step = WIZARD_STEPS[currentStep];
   if (!step) return null;
 
   const stepData = STEP_DATA[step.id];
-  const isPersonality = step.id === 'personality';
+  const isMulti = step.mode === 'multi';
   const isLastStep = currentStep === WIZARD_STEPS.length - 1;
 
-  const selectedIds: string[] = isPersonality
-    ? selection.personalities
+  const selectedIds: string[] = isMulti
+    ? ((selection[MULTI_KEY_MAP[step.id as MultiStepId]] as string[] | undefined) ?? [])
     : (() => {
-        const key = SINGLE_KEY_MAP[step.id as Exclude<WizardStepId, 'personality'>];
-        const v = selection[key];
+        const v = selection[SINGLE_KEY_MAP[step.id as SingleStepId]];
         return v ? [v] : [];
       })();
 
   const canGoNext = selectedIds.length > 0;
 
   const handleToggle = (id: string) => {
-    if (isPersonality) {
-      togglePersonality(id);
+    if (isMulti) {
+      toggleMulti(MULTI_KEY_MAP[step.id as MultiStepId], id);
     } else {
-      const key = SINGLE_KEY_MAP[step.id as Exclude<WizardStepId, 'personality'>];
-      setSingle(key, id);
+      setSingle(SINGLE_KEY_MAP[step.id as SingleStepId], id);
     }
   };
 

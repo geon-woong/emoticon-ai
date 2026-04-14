@@ -1,62 +1,71 @@
 [
-  {
-    "id": "office_worker",
-    "label": "직장인",
-    "modifiers": ["열정 가득 사회 초년생", "야근에 찌든", "10년차 베테랑", "퇴사 꿈꾸는", "월요병 가득한"]
-  },
-  {
-    "id": "student",
-    "label": "학생",
-    "modifiers": ["벼락치기 단골", "전교 1등", "조별과제 짊어진", "시험 망친"]
-  },
-  {
-    "id": "emoticon_artist",
-    "label": "이모티콘 작가",
-    "modifiers": ["열정적인", "마감에 쫓기는", "데뷔 준비 중인", "꿈 많은"]
-  },
-  {
-    "id": "freelancer",
-    "label": "프리랜서",
-    "modifiers": ["방구석", "마감 임박", "n년차", "카페 출근하는"]
-  },
-  {
-    "id": "developer",
-    "label": "개발자",
-    "modifiers": ["버그 잡는", "야근하는", "주니어", "시니어"]
-  },
-  {
-    "id": "designer",
-    "label": "디자이너",
-    "modifiers": ["감각 충만한", "포토샵 마스터", "시안 무한 수정"]
-  },
-  {
-    "id": "barista",
-    "label": "바리스타",
-    "modifiers": ["주말 알바", "라떼아트 장인", "신메뉴 개발"]
-  },
-  {
-    "id": "teacher",
-    "label": "선생님",
-    "modifiers": ["열혈", "신규", "베테랑", "다정한"]
-  },
-  {
-    "id": "doctor",
-    "label": "의사",
-    "modifiers": ["인턴", "응급실", "친절한"]
-  },
-  {
-    "id": "housewife",
-    "label": "주부",
-    "modifiers": ["살림 만렙", "집순이", "n년차", "육아 중인"]
-  },
-  {
-    "id": "youtuber",
-    "label": "유튜버",
-    "modifiers": ["구독자 0명", "신입", "100만 도전 중인"]
-  },
-  {
-    "id": "soldier",
-    "label": "군인",
-    "modifiers": ["이등병", "병장", "전역 D-1"]
-  }
+  { "id": "office_worker", "label": "회사원", "tone": "active", "modifiers": ["야근에 찌든", "10년차 베테랑", "퇴사 꿈꾸는", "월요병 가득한"] },
+  { "id": "developer", "label": "개발자", "tone": "active", "modifiers": ["버그 잡는", "야근하는", "주니어", "시니어"] },
+  { "id": "designer", "label": "디자이너", "tone": "active", "modifiers": ["감각 충만한", "시안 무한 수정", "포토샵 마스터"] },
+  { "id": "marketer", "label": "마케터", "tone": "active" },
+  { "id": "planner", "label": "기획자", "tone": "active" },
+  { "id": "freelancer", "label": "프리랜서", "tone": "calm", "modifiers": ["방구석", "마감 임박", "카페 출근하는"] },
+  { "id": "entrepreneur", "label": "창업가", "tone": "active" },
+  { "id": "youtuber", "label": "유튜버", "tone": "active", "modifiers": ["구독자 0명", "100만 도전 중인", "신입"] },
+  { "id": "influencer", "label": "인플루언서", "tone": "active" },
+  { "id": "creator", "label": "크리에이터", "tone": "active" },
+  { "id": "part_timer", "label": "아르바이트", "tone": "active" },
+  { "id": "cafe_staff", "label": "카페직원", "tone": "calm", "modifiers": ["라떼아트 장인", "주말 알바", "신메뉴 개발"] },
+  { "id": "convenience_store", "label": "편의점직원", "tone": "active" },
+  { "id": "boss", "label": "사장님", "tone": "active" },
+  { "id": "chef", "label": "요리사", "tone": "active" },
+  { "id": "barista", "label": "바리스타", "tone": "calm", "modifiers": ["라떼아트 장인", "주말 알바", "신메뉴 개발"] },
+  { "id": "delivery", "label": "배달기사", "tone": "active" },
+  { "id": "service", "label": "서비스직", "tone": "active" },
+  { "id": "sales", "label": "판매직", "tone": "active" },
+  { "id": "shift_work", "label": "교대근무", "tone": "calm" },
+  { "id": "journalist", "label": "기자", "tone": "active" },
+  { "id": "teacher", "label": "선생님", "tone": "calm", "modifiers": ["열혈", "신규", "베테랑", "다정한"] },
+  { "id": "instructor", "label": "강사", "tone": "active" },
+  { "id": "professor", "label": "교수", "tone": "calm" },
+  { "id": "university_student", "label": "대학생", "tone": "active" },
+  { "id": "job_seeker", "label": "취준생", "tone": "calm" },
+  { "id": "civil_servant", "label": "공무원", "tone": "calm" },
+  { "id": "soldier", "label": "군인", "tone": "active", "modifiers": ["이등병", "병장", "전역 D-1"] },
+  { "id": "police", "label": "경찰", "tone": "active" },
+  { "id": "firefighter", "label": "소방관", "tone": "active" },
+  { "id": "doctor", "label": "의사", "tone": "active", "modifiers": ["인턴", "응급실", "친절한"] },
+  { "id": "nurse", "label": "간호사", "tone": "active" },
+  { "id": "pharmacist", "label": "약사", "tone": "calm" },
+  { "id": "lawyer", "label": "변호사", "tone": "active" },
+  { "id": "accountant", "label": "회계사", "tone": "calm" },
+  { "id": "tax_accountant", "label": "세무사", "tone": "calm" },
+  { "id": "banker", "label": "은행원", "tone": "calm" },
+  { "id": "insurance", "label": "보험설계사", "tone": "active" },
+  { "id": "engineer", "label": "엔지니어", "tone": "active" },
+  { "id": "data_analyst", "label": "데이터분석가", "tone": "calm" },
+  { "id": "ai_developer", "label": "AI개발자", "tone": "active" },
+  { "id": "pm", "label": "PM", "tone": "active" },
+  { "id": "startup", "label": "스타트업직원", "tone": "active" },
+  { "id": "writer", "label": "작가", "tone": "calm" },
+  { "id": "webtoon_artist", "label": "웹툰작가", "tone": "active", "modifiers": ["연재 중인", "마감 지옥", "꿈 많은"] },
+  { "id": "illustrator", "label": "일러스트레이터", "tone": "calm" },
+  { "id": "video_editor", "label": "영상편집자", "tone": "active" },
+  { "id": "photographer", "label": "사진작가", "tone": "calm" },
+  { "id": "model", "label": "모델", "tone": "active" },
+  { "id": "actor", "label": "배우", "tone": "active" },
+  { "id": "voice_actor", "label": "성우", "tone": "calm" },
+  { "id": "pd", "label": "PD", "tone": "active" },
+  { "id": "florist", "label": "플로리스트", "tone": "calm" },
+  { "id": "hair_designer", "label": "헤어디자이너", "tone": "active" },
+  { "id": "nail_artist", "label": "네일리스트", "tone": "calm" },
+  { "id": "makeup_artist", "label": "메이크업아티스트", "tone": "active" },
+  { "id": "trainer", "label": "헬스트레이너", "tone": "active" },
+  { "id": "pt_member", "label": "PT회원", "tone": "active" },
+  { "id": "sports_coach", "label": "운동코치", "tone": "active" },
+  { "id": "farmer", "label": "농부", "tone": "calm" },
+  { "id": "self_employed", "label": "자영업자", "tone": "active" },
+  { "id": "unemployed", "label": "백수", "tone": "calm" },
+  { "id": "investor", "label": "투자자", "tone": "active" },
+  { "id": "shopping_host", "label": "쇼호스트", "tone": "active" },
+  { "id": "hotelier", "label": "호텔리어", "tone": "calm" },
+  { "id": "flight_attendant", "label": "승무원", "tone": "active" },
+  { "id": "travel_guide", "label": "여행가이드", "tone": "active" },
+  { "id": "pet_sitter", "label": "펫시터", "tone": "calm" },
+  { "id": "animal_trainer", "label": "반려동물훈련사", "tone": "calm" }
 ]

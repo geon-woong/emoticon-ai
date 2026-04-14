@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { RotateCcw, ChevronLeft } from 'lucide-react';
+import { RotateCcw, ChevronLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ConceptResultGrid } from '@/components/concept/ConceptResultGrid';
-import { AiRecommendButton } from '@/components/concept/AiRecommendButton';
+import { ConceptDetailModal } from '@/components/concept/ConceptDetailModal';
 import { useConceptWizardStore } from '@/stores/concept-wizard-store';
 import { recommendConcepts, type RecommendData } from '@/lib/recommend/rule-based';
-import type { RecommendResult } from '@/types/concept';
+import { saveConceptSelection } from '@/lib/storage/concept-selection';
+import type { ConceptSuggestion } from '@/types/concept';
 
 import ages from '@/data/keywords/ages.json';
 import genders from '@/data/keywords/genders.json';
@@ -18,6 +19,7 @@ import relationships from '@/data/keywords/relationships.json';
 import hobbies from '@/data/keywords/hobbies.json';
 import sports from '@/data/keywords/sports.json';
 import modifiers from '@/data/keywords/modifiers.json';
+import speechStyles from '@/data/keywords/speech-styles.json';
 
 const DATA: RecommendData = {
   personalities: personalities as RecommendData['personalities'],
@@ -28,12 +30,15 @@ const DATA: RecommendData = {
   modifiers: modifiers as RecommendData['modifiers'],
 };
 
-// 라벨 lookup용 (선택 요약 표시)
+// 라벨 lookup용 (선택 요약 표시 + 프롬프트 빌드)
 const LABEL_MAPS = {
   age: new Map((ages as { id: string; label: string }[]).map((x) => [x.id, x.label])),
   gender: new Map((genders as { id: string; label: string }[]).map((x) => [x.id, x.label])),
   personality: new Map(
     (personalities as { id: string; label: string }[]).map((x) => [x.id, x.label])
+  ),
+  speechStyle: new Map(
+    (speechStyles as { id: string; label: string }[]).map((x) => [x.id, x.label])
   ),
 };
 
@@ -43,15 +48,16 @@ export default function ConceptResultPage() {
   const reset = useConceptWizardStore((s) => s.reset);
   const setStep = useConceptWizardStore((s) => s.setStep);
 
-  const [llmResult, setLlmResult] = useState<RecommendResult | null>(null);
+  const [selectedConcept, setSelectedConcept] = useState<ConceptSuggestion | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   // 위저드를 거치지 않고 바로 진입한 경우 가드
   const hasMinimum =
     selection.personalities.length > 0 &&
     (selection.job ||
       selection.relationship ||
-      selection.hobby ||
-      selection.sport);
+      selection.hobbies.length > 0 ||
+      selection.sports.length > 0);
 
   useEffect(() => {
     if (!hasMinimum) {
@@ -59,18 +65,17 @@ export default function ConceptResultPage() {
     }
   }, [hasMinimum, router]);
 
+  // 컨셉 찾기 완료 시 로컬스토리지에 선택값 저장
+  useEffect(() => {
+    if (hasMinimum) {
+      saveConceptSelection(selection);
+    }
+  }, [hasMinimum, selection]);
+
   const ruleResult = useMemo(() => {
     if (!hasMinimum) return { bySubject: {} };
     return recommendConcepts(selection, DATA, { seed: stableSeed(selection) });
   }, [selection, hasMinimum]);
-
-  const ruleTexts = useMemo(() => {
-    const texts: string[] = [];
-    for (const arr of Object.values(ruleResult.bySubject)) {
-      for (const c of arr ?? []) texts.push(c.text);
-    }
-    return texts;
-  }, [ruleResult]);
 
   if (!hasMinimum) return null;
 
@@ -97,17 +102,27 @@ export default function ConceptResultPage() {
         <p className="text-sm text-brand-muted">
           {LABEL_MAPS.age.get(selection.age ?? '')} ·{' '}
           {LABEL_MAPS.gender.get(selection.gender ?? '')} · 성격: {personalityLabels}
+          {selection.speechStyle && ` · 말투: ${LABEL_MAPS.speechStyle.get(selection.speechStyle)}`}
+        </p>
+        <p className="text-sm text-brand-selected font-medium">
+          컨셉을 하나 선택한 후 구체화할 수 있어요.
         </p>
       </header>
 
-      <ConceptResultGrid bySubject={ruleResult.bySubject} title="기본 추천" />
+      <ConceptResultGrid
+        bySubject={ruleResult.bySubject}
+        selectedConceptId={selectedConcept?.id}
+        onSelect={setSelectedConcept}
+      />
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-        <AiRecommendButton
-          selection={selection}
-          excludeTexts={ruleTexts}
-          onResult={setLlmResult}
-        />
+        <Button
+          onClick={() => setShowModal(true)}
+          disabled={!selectedConcept}
+        >
+          <ArrowRight className="h-5 w-5" />
+          컨셉 구체화 하러가기
+        </Button>
         <Button
           variant="secondary"
           onClick={() => {
@@ -120,8 +135,14 @@ export default function ConceptResultPage() {
         </Button>
       </div>
 
-      {llmResult && (
-        <ConceptResultGrid bySubject={llmResult.bySubject} title="AI가 제안한 컨셉" />
+      {selectedConcept && (
+        <ConceptDetailModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          selectedConcept={selectedConcept}
+          selection={selection}
+          labelMaps={LABEL_MAPS}
+        />
       )}
     </div>
   );

@@ -12,8 +12,9 @@ export const WIZARD_STEPS: ReadonlyArray<{
   { id: 'personality', label: '성격', mode: 'multi' },
   { id: 'job', label: '직업', mode: 'single' },
   { id: 'relationship', label: '관계', mode: 'single' },
-  { id: 'hobby', label: '취미', mode: 'single' },
-  { id: 'sport', label: '운동', mode: 'single' },
+  { id: 'hobby', label: '취미', mode: 'multi' },
+  { id: 'sport', label: '운동', mode: 'multi' },
+  { id: 'speech-style', label: '말투', mode: 'single' },
 ];
 
 const initialSelection: WizardSelection = {
@@ -22,11 +23,13 @@ const initialSelection: WizardSelection = {
   personalities: [],
   job: null,
   relationship: null,
-  hobby: null,
-  sport: null,
+  hobbies: [],
+  sports: [],
+  speechStyle: null,
 };
 
-type SingleKey = Exclude<keyof WizardSelection, 'personalities'>;
+type SingleKey = 'age' | 'gender' | 'job' | 'relationship' | 'speechStyle';
+type MultiKey = 'personalities' | 'hobbies' | 'sports';
 
 interface ConceptWizardState {
   currentStep: number;
@@ -34,8 +37,8 @@ interface ConceptWizardState {
   setStep: (n: number) => void;
   next: () => void;
   prev: () => void;
-  setSingle: <K extends SingleKey>(key: K, value: WizardSelection[K]) => void;
-  togglePersonality: (id: string) => void;
+  setSingle: <K extends SingleKey>(key: K, value: string) => void;
+  toggleMulti: (key: MultiKey, id: string) => void;
   reset: () => void;
 }
 
@@ -51,22 +54,16 @@ export const useConceptWizardStore = create<ConceptWizardState>()(
         set((s) => ({ currentStep: Math.max(s.currentStep - 1, 0) })),
       setSingle: (key, value) =>
         set((s) => ({ selection: { ...s.selection, [key]: value } })),
-      togglePersonality: (id) =>
+      toggleMulti: (key, id) =>
         set((s) => {
-          const has = s.selection.personalities.includes(id);
-          return {
-            selection: {
-              ...s.selection,
-              personalities: has
-                ? s.selection.personalities.filter((p) => p !== id)
-                : [...s.selection.personalities, id],
-            },
-          };
+          const arr = s.selection[key] as string[];
+          const next = arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
+          return { selection: { ...s.selection, [key]: next } };
         }),
       reset: () => set({ currentStep: 0, selection: initialSelection }),
     }),
     {
-      name: 'emoticon-ai/concept-wizard',
+      name: 'emoticon-ai/concept-wizard-v2',
       storage: createJSONStorage(() =>
         typeof window !== 'undefined' ? sessionStorage : (undefined as unknown as Storage)
       ),

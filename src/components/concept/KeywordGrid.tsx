@@ -11,9 +11,10 @@ interface Props {
   onToggle: (id: string) => void;
 }
 
+
 export function KeywordGrid({ items, mode, selectedIds, onToggle }: Props) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 overflow-scroll max-h-64 py-5">
       {items.map((item) => {
         const selected = selectedIds.includes(item.id);
         return (

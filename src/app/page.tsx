@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, User, MessageCircle } from 'lucide-react';
+import { Sparkles, User, MessageCircle, Palette } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/utils/cn';
 
@@ -24,14 +24,21 @@ const FEATURES: FeatureCard[] = [
     title: '캐릭터 주체 찾기',
     description: '컨셉에 어울리는 캐릭터 주체를 찾아요',
     icon: <User className="h-8 w-8" />,
-    enabled: false,
+    enabled: true,
   },
   {
     href: '/message',
-    title: '메시지 찾기',
-    description: '이모티콘에 들어갈 메시지를 추천받아요',
+    title: '이모티콘 메시지 기획하기',
+    description: '이모티콘에 들어갈 32개 메시지를 기획해요',
     icon: <MessageCircle className="h-8 w-8" />,
-    enabled: false,
+    enabled: true,
+  },
+  {
+    href: '/design',
+    title: '캐릭터 디자인하기',
+    description: '컨셉에 맞는 캐릭터를 AI로 디자인해요',
+    icon: <Palette className="h-8 w-8" />,
+    enabled: true,
   },
 ];
 
@@ -50,12 +57,12 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+      <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f) => {
           const inner = (
             <Card
               className={cn(
-                'flex h-full flex-col items-center gap-4 p-8 text-center transition',
+                'flex h-full flex-col items-center gap-4 p-6 text-center transition',
                 f.enabled
                   ? 'cursor-pointer hover:-translate-y-1 hover:border-brand-selected hover:shadow-md'
                   : 'pointer-events-none opacity-60'

@@ -56,12 +56,23 @@ export function buildConceptPrompt(
     .map((id) => MAPS.personality.get(id))
     .filter((x): x is string => Boolean(x));
 
-  const subjects: { key: string; label: string | undefined }[] = [];
-  if (selection.job) subjects.push({ key: '직업', label: MAPS.job.get(selection.job) });
-  if (selection.relationship)
-    subjects.push({ key: '관계', label: MAPS.relationship.get(selection.relationship) });
-  if (selection.hobby) subjects.push({ key: '취미', label: MAPS.hobby.get(selection.hobby) });
-  if (selection.sport) subjects.push({ key: '운동', label: MAPS.sport.get(selection.sport) });
+  const subjects: { key: string; labels: string[] }[] = [];
+  if (selection.job) {
+    const label = MAPS.job.get(selection.job);
+    if (label) subjects.push({ key: '직업', labels: [label] });
+  }
+  if (selection.relationship) {
+    const label = MAPS.relationship.get(selection.relationship);
+    if (label) subjects.push({ key: '관계', labels: [label] });
+  }
+  if (selection.hobbies.length > 0) {
+    const labels = selection.hobbies.map((id) => MAPS.hobby.get(id)).filter((x): x is string => Boolean(x));
+    if (labels.length > 0) subjects.push({ key: '취미', labels });
+  }
+  if (selection.sports.length > 0) {
+    const labels = selection.sports.map((id) => MAPS.sport.get(id)).filter((x): x is string => Boolean(x));
+    if (labels.length > 0) subjects.push({ key: '운동', labels });
+  }
 
   const lines: string[] = ['사용자 선택 정보:'];
   if (ageLabel) lines.push(`- 나이: ${ageLabel}`);
@@ -69,7 +80,7 @@ export function buildConceptPrompt(
   if (personalityLabels.length > 0)
     lines.push(`- 성격: ${personalityLabels.join(', ')}`);
   for (const s of subjects) {
-    if (s.label) lines.push(`- ${s.key}: ${s.label}`);
+    lines.push(`- ${s.key}: ${s.labels.join(', ')}`);
   }
 
   if (excludeTexts.length > 0) {
@@ -81,8 +92,8 @@ export function buildConceptPrompt(
   lines.push('');
   lines.push(
     `위 정보를 바탕으로 추천 원칙 5가지를 지키며, 선택된 주제(${subjects
-      .map((s) => s.key)
-      .join('/')})별로 각 3개씩 컨셉을 JSON으로 반환하세요.`
+      .map((s) => `${s.key}: ${s.labels.join(', ')}`)
+      .join(' / ')})별로 각 아이템마다 3개씩 컨셉을 JSON으로 반환하세요.`
   );
 
   return { system: SYSTEM_PROMPT, user: lines.join('\n') };

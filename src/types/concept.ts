@@ -5,7 +5,8 @@ export type WizardStepId =
   | 'job'
   | 'relationship'
   | 'hobby'
-  | 'sport';
+  | 'sport'
+  | 'speech-style';
 
 export type SubjectKey = 'job' | 'relationship' | 'hobby' | 'sport';
 
@@ -28,8 +29,9 @@ export interface WizardSelection {
   personalities: string[];
   job: string | null;
   relationship: string | null;
-  hobby: string | null;
-  sport: string | null;
+  hobbies: string[];
+  sports: string[];
+  speechStyle: string | null;
 }
 
 export interface ConceptSuggestion {

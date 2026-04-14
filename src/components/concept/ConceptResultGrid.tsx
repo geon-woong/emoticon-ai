@@ -5,11 +5,13 @@ import { ConceptCard } from './ConceptCard';
 interface Props {
   bySubject: Partial<Record<SubjectKey, ConceptSuggestion[]>>;
   title?: string;
+  selectedConceptId?: string;
+  onSelect?: (concept: ConceptSuggestion) => void;
 }
 
 const ORDER: SubjectKey[] = ['job', 'relationship', 'hobby', 'sport'];
 
-export function ConceptResultGrid({ bySubject, title }: Props) {
+export function ConceptResultGrid({ bySubject, title, selectedConceptId, onSelect }: Props) {
   const sections = ORDER.filter((k) => (bySubject[k] ?? []).length > 0);
   if (sections.length === 0) return null;
 
@@ -27,7 +29,12 @@ export function ConceptResultGrid({ bySubject, title }: Props) {
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {concepts.map((c) => (
-                <ConceptCard key={c.id} concept={c} />
+                <ConceptCard
+                  key={c.id}
+                  concept={c}
+                  isSelected={selectedConceptId === c.id}
+                  onSelect={onSelect ? () => onSelect(c) : undefined}
+                />
               ))}
             </div>
           </div>
