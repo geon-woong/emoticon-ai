@@ -12,8 +12,158 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ConceptResultGrid } from '@/components/concept/ConceptResultGrid';
-import { CharacterDesignModal } from '@/components/design/CharacterDesignModal';
+import { PromptModal } from '@/components/ui/PromptModal';
 import { loadConceptSelection } from '@/lib/storage/concept-selection';
+
+const CHARACTER_DESIGN_TEMPLATE = `첨부된 캐릭터 러프 스케치와 입력정보를 기반으로, 러프 스케치 이미지가 없다면 입력 정보만을 바탕으로
+카카오 이모티콘에 적합한 캐릭터로 디자인하여 이미지로 출력하세요.
+
+이 작업은 원본 러프 스케치 캐릭터의 특징을 유지하면서
+이모티콘에 최적화된 형태로 정리하는 과정입니다.
+
+---
+
+[입력 정보]
+
+컨셉: {concept}
+캐릭터 주체: {characterType}
+캐릭터 구조: {bodyType} (일체형 / 이족보행형 / 사족보행형)
+그림체 스타일: {style} (기본형 / B급형 / 공감형)
+캐릭터 개성 요소: {features} (최대 3개)
+색감: {colorStyle}
+
+---
+
+[작업 목표]
+
+- 러프 스케치의 핵심 특징을 유지한다
+- 불필요한 디테일을 정리한다
+- 이모티콘에 적합한 단순하고 명확한 캐릭터로 완성한다
+
+---
+
+[핵심 원칙]
+
+1. 원본 특징 유지
+- 캐릭터의 기본 형태와 인상을 유지할 것
+- 캐릭터 정체성이 변형되지 않도록 할 것
+2. 재디자인 허용 범위
+- 선 정리, 형태 정돈, 비율 보정은 허용
+- 캐릭터 자체가 바뀌는 수준의 변경은 금지
+3. 단순화 방향
+- 디테일은 줄이되 특징은 더 선명하게
+- 복잡한 요소 제거, 핵심만 강조
+
+---
+
+[캐릭터 구조 규칙]
+
+- 반드시 입력된 캐릭터 구조를 따를 것
+1. 일체형
+→ 머리와 몸통이 하나로 연결된 형태 (이모티콘 스타일 기본형)
+2. 이족보행형
+→ 두 발로 서 있는 구조 (사람형/동물형 캐릭터)
+3. 사족보행형
+→ 네 발로 움직이는 구조
+- 구조를 임의로 변경하지 말 것
+
+---
+
+[비율 트렌드 규칙]
+
+- 최근 이모티콘 트렌드에 맞게 얼굴 비중이 더 큰 비율로 구성할 것
+- 기본적으로 머리 중심 비율 (약 2~2.5등신 느낌)
+- 얼굴이 강조되고 몸통은 상대적으로 단순하게 처리
+
+---
+
+[팔다리 규칙]
+
+- 팔다리는 기본적으로 짧고 단순하게 표현할 것
+- 캐릭터 주체의 핵심 개성이 아닌 경우 길게 표현하지 말 것
+- 손/발 디테일 최소화
+- 포즈 확장성을 고려해 단순 구조 유지
+
+---
+
+[이모티콘 최적화 규칙]
+
+1. 실루엣
+- 작은 사이즈에서도 형태가 명확하게 보이도록
+2. 표정 전달력
+- 눈과 입이 잘 보이도록 구성
+- 감정 전달 우선
+3. 반복 사용성
+- 다양한 표정/포즈로 확장 가능하게 단순 구조 유지
+
+---
+
+[개성 요소 규칙]
+
+- 입력된 개성 요소는 반드시 반영
+- 최소 1개 ~ 최대 3개까지만 유지
+- (예: 눈썹, 볼터치, 무늬, 소품 등)
+- 핵심 포인트로 강조
+
+---
+
+[스타일 규칙]
+
+- 손으로 그린 느낌 유지
+- 약간 삐뚤고 자연스러운 선 허용
+- AI 특유의 매끈한 벡터 스타일 금지
+- 완벽한 대칭 금지
+
+---
+
+[색감 규칙]
+
+- 전체 색상 개수는 최소 1개, 최대 4개까지만 사용할 것
+- 가능한 한 색상 개수를 줄일 것 (2~3색 권장)
+- 핵심 색상 1개 중심 + 보조 색상 구성
+- 플랫 컬러 사용
+- 작은 사이즈에서도 대비 확보
+
+---
+
+[출력 설정]
+
+- 이미지 크기: 1080 x 1080 px (정사각형)
+- 해상도: 72 dpi
+- 배경: 흰색 단색 (순수 흰색, 패턴/그라데이션 금지)
+- 캐릭터는 중앙에 배치할 것
+- 여백은 적절히 확보하여 잘리지 않도록 할 것
+- 작은 사이즈에서도 캐릭터가 명확하게 보이도록 구성
+- 최종 결과는 이모티콘 제작에 바로 사용할 수 있는 완성형 이미지로 출력
+- 단일 캐릭터 이미지 출력
+- 이모티콘 제작 가능한 완성형 캐릭터
+
+---
+
+[절대 금지 사항]
+
+- 캐릭터 정체성 변경
+- 개성 요소 3개 초과
+- 과한 디테일 추가
+- 현실적인 묘사
+- AI 느낌 나는 스타일
+
+---
+
+최종 결과는 "이모티콘에 바로 사용할 수 있는 캐릭터"로 완성하여 이미지로 출력하세요.`;
+
+function buildCharacterDesignPrompt(params: {
+  concept: string; characterType: string; bodyType: string;
+  drawingStyle: string; features: string; colorStyle: string;
+}): string {
+  return CHARACTER_DESIGN_TEMPLATE
+    .replace('{concept}', params.concept)
+    .replace('{characterType}', params.characterType)
+    .replace('{bodyType}', params.bodyType)
+    .replace('{style}', params.drawingStyle)
+    .replace('{features}', params.features)
+    .replace('{colorStyle}', params.colorStyle);
+}
 import { recommendConcepts, type RecommendData } from '@/lib/recommend/rule-based';
 import { cn } from '@/lib/utils/cn';
 import type { ConceptSuggestion, WizardSelection } from '@/types/concept';
@@ -337,20 +487,25 @@ export default function DesignPage() {
       </div>
 
       {/* 모달 */}
-      {state.concept && (
-        <CharacterDesignModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-          params={{
-            concept: state.concept.text,
-            characterType: effectiveCharacterType,
-            bodyType: state.bodyType ?? '',
-            drawingStyle: state.drawingStyle ?? '',
-            features: effectiveFeatures,
-            colorStyle: effectiveColorStyle,
-          }}
-        />
-      )}
+      <PromptModal
+        open={showModal && state.concept !== null}
+        onClose={() => setShowModal(false)}
+        title="캐릭터 디자인 프롬프트"
+        subtitle={state.concept ? `컨셉: ${state.concept.text}` : undefined}
+        description={<>
+          아래 프롬프트를 복사한 후 ChatGPT 또는 Gemini에 붙여넣으세요.
+          <br />
+          <span className="font-medium text-brand-text">러프 스케치 이미지가 있다면 함께 첨부</span>하면 더 정확한 결과를 얻을 수 있어요.
+        </>}
+        prompt={state.concept ? buildCharacterDesignPrompt({
+          concept: state.concept.text,
+          characterType: effectiveCharacterType,
+          bodyType: state.bodyType ?? '',
+          drawingStyle: state.drawingStyle ?? '',
+          features: effectiveFeatures,
+          colorStyle: effectiveColorStyle,
+        }) : ''}
+      />
     </div>
   );
 }
