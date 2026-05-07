@@ -5,7 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '이모티콘 AI',
+  title: '동동작가의 이모티콘 전용 AI',
   description: '이모티콘 작가를 위한 컨셉/캐릭터/메시지 도우미',
 };
 
