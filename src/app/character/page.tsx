@@ -171,7 +171,7 @@ function stableSeed(selection: unknown): number {
 function hasMinimumSelection(s: WizardSelection): boolean {
   return (
     s.personalities.length > 0 &&
-    (!!s.job || !!s.relationship || s.hobbies.length > 0 || s.sports.length > 0)
+    (s.jobs.length > 0 || s.relationships.length > 0 || s.hobbies.length > 0 || s.sports.length > 0)
   );
 }
 

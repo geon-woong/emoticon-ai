@@ -57,13 +57,13 @@ export function buildConceptPrompt(
     .filter((x): x is string => Boolean(x));
 
   const subjects: { key: string; labels: string[] }[] = [];
-  if (selection.job) {
-    const label = MAPS.job.get(selection.job);
-    if (label) subjects.push({ key: '직업', labels: [label] });
+  if (selection.jobs.length > 0) {
+    const labels = selection.jobs.map((id) => MAPS.job.get(id)).filter((x): x is string => Boolean(x));
+    if (labels.length > 0) subjects.push({ key: '직업', labels });
   }
-  if (selection.relationship) {
-    const label = MAPS.relationship.get(selection.relationship);
-    if (label) subjects.push({ key: '관계', labels: [label] });
+  if (selection.relationships.length > 0) {
+    const labels = selection.relationships.map((id) => MAPS.relationship.get(id)).filter((x): x is string => Boolean(x));
+    if (labels.length > 0) subjects.push({ key: '관계', labels });
   }
   if (selection.hobbies.length > 0) {
     const labels = selection.hobbies.map((id) => MAPS.hobby.get(id)).filter((x): x is string => Boolean(x));

@@ -33,14 +33,11 @@ export function recommendConcepts(
   data: RecommendData,
   options: RecommendOptions = {}
 ): RecommendResult {
-  const perSubject = options.perSubject ?? 3;
   const rng = createSeededRng(options.seed ?? Date.now());
 
-  // 단일 선택 주제: job, relationship
-  // 복수 선택 주제: hobby(hobbies), sport(sports)
   const subjects: ReadonlyArray<readonly [SubjectKey, string[], KeywordItem[]]> = [
-    ['job', selection.job ? [selection.job] : [], data.jobs],
-    ['relationship', selection.relationship ? [selection.relationship] : [], data.relationships],
+    ['job', selection.jobs, data.jobs],
+    ['relationship', selection.relationships, data.relationships],
     ['hobby', selection.hobbies, data.hobbies],
     ['sport', selection.sports, data.sports],
   ];
@@ -60,12 +57,13 @@ export function recommendConcepts(
       const subjectItem = pool.find((p) => p.id === selectedId);
       if (!subjectItem) continue;
 
+      const itemCount = options.perSubject ?? 1;
       const concepts: ConceptSuggestion[] = [];
       const used = new Set<string>();
-      const maxAttempts = perSubject * 8;
+      const maxAttempts = itemCount * 8;
       let attempts = 0;
 
-      while (concepts.length < perSubject && attempts < maxAttempts) {
+      while (concepts.length < itemCount && attempts < maxAttempts) {
         attempts++;
 
         const personality =

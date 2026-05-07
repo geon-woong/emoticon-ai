@@ -10,8 +10,8 @@ export const WIZARD_STEPS: ReadonlyArray<{
   { id: 'age', label: '나이', mode: 'single' },
   { id: 'gender', label: '성별', mode: 'single' },
   { id: 'personality', label: '성격', mode: 'multi' },
-  { id: 'job', label: '직업', mode: 'single' },
-  { id: 'relationship', label: '관계', mode: 'single' },
+  { id: 'job', label: '직업', mode: 'multi' },
+  { id: 'relationship', label: '관계', mode: 'multi' },
   { id: 'hobby', label: '취미', mode: 'multi' },
   { id: 'sport', label: '운동', mode: 'multi' },
   { id: 'speech-style', label: '말투', mode: 'single' },
@@ -21,15 +21,15 @@ const initialSelection: WizardSelection = {
   age: null,
   gender: null,
   personalities: [],
-  job: null,
-  relationship: null,
+  jobs: [],
+  relationships: [],
   hobbies: [],
   sports: [],
   speechStyle: null,
 };
 
-type SingleKey = 'age' | 'gender' | 'job' | 'relationship' | 'speechStyle';
-type MultiKey = 'personalities' | 'hobbies' | 'sports';
+type SingleKey = 'age' | 'gender' | 'speechStyle';
+type MultiKey = 'personalities' | 'jobs' | 'relationships' | 'hobbies' | 'sports';
 
 interface ConceptWizardState {
   currentStep: number;
@@ -57,13 +57,16 @@ export const useConceptWizardStore = create<ConceptWizardState>()(
       toggleMulti: (key, id) =>
         set((s) => {
           const arr = s.selection[key] as string[];
-          const next = arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
-          return { selection: { ...s.selection, [key]: next } };
+          if (arr.includes(id)) {
+            return { selection: { ...s.selection, [key]: arr.filter((x) => x !== id) } };
+          }
+          if (arr.length >= 3) return s;
+          return { selection: { ...s.selection, [key]: [...arr, id] } };
         }),
       reset: () => set({ currentStep: 0, selection: initialSelection }),
     }),
     {
-      name: 'emoticon-ai/concept-wizard-v2',
+      name: 'emoticon-ai/concept-wizard-v3',
       storage: createJSONStorage(() =>
         typeof window !== 'undefined' ? sessionStorage : (undefined as unknown as Storage)
       ),

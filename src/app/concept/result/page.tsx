@@ -160,8 +160,8 @@ export default function ConceptResultPage() {
   // 위저드를 거치지 않고 바로 진입한 경우 가드
   const hasMinimum =
     selection.personalities.length > 0 &&
-    (selection.job ||
-      selection.relationship ||
+    (selection.jobs.length > 0 ||
+      selection.relationships.length > 0 ||
       selection.hobbies.length > 0 ||
       selection.sports.length > 0);
 

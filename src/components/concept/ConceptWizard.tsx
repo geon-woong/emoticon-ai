@@ -23,8 +23,8 @@ const STEP_DATA: Record<WizardStepId, { items: KeywordItem[]; description: strin
     items: personalities as KeywordItem[],
     description: '성격을 골라주세요 (여러 개 선택 가능)',
   },
-  job: { items: jobs as KeywordItem[], description: '직업을 골라주세요' },
-  relationship: { items: relationships as KeywordItem[], description: '관계를 골라주세요' },
+  job: { items: jobs as KeywordItem[], description: '직업을 골라주세요 (최대 3개)' },
+  relationship: { items: relationships as KeywordItem[], description: '관계를 골라주세요 (최대 3개)' },
   hobby: {
     items: hobbies as KeywordItem[],
     description: '취미를 골라주세요 (여러 개 선택 가능)',
@@ -39,19 +39,19 @@ const STEP_DATA: Record<WizardStepId, { items: KeywordItem[]; description: strin
   },
 };
 
-type SingleStepId = 'age' | 'gender' | 'job' | 'relationship' | 'speech-style';
-type MultiStepId = 'personality' | 'hobby' | 'sport';
+type SingleStepId = 'age' | 'gender' | 'speech-style';
+type MultiStepId = 'personality' | 'job' | 'relationship' | 'hobby' | 'sport';
 
-const SINGLE_KEY_MAP: Record<SingleStepId, 'age' | 'gender' | 'job' | 'relationship' | 'speechStyle'> = {
+const SINGLE_KEY_MAP: Record<SingleStepId, 'age' | 'gender' | 'speechStyle'> = {
   age: 'age',
   gender: 'gender',
-  job: 'job',
-  relationship: 'relationship',
   'speech-style': 'speechStyle',
 };
 
-const MULTI_KEY_MAP: Record<MultiStepId, 'personalities' | 'hobbies' | 'sports'> = {
+const MULTI_KEY_MAP: Record<MultiStepId, 'personalities' | 'jobs' | 'relationships' | 'hobbies' | 'sports'> = {
   personality: 'personalities',
+  job: 'jobs',
+  relationship: 'relationships',
   hobby: 'hobbies',
   sport: 'sports',
 };
@@ -110,6 +110,7 @@ export function ConceptWizard() {
         mode={step.mode}
         selectedIds={selectedIds}
         onToggle={handleToggle}
+        maxReached={isMulti && selectedIds.length >= 3}
       />
       <WizardNav
         canGoBack={currentStep > 0}

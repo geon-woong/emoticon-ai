@@ -19,8 +19,8 @@ export interface WizardSelection {
   age: string | null;
   gender: string | null;
   personalities: string[];
-  job: string | null;
-  relationship: string | null;
+  jobs: string[];
+  relationships: string[];
   hobbies: string[];
   sports: string[];
   speechStyle: string | null;
