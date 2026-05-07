@@ -317,18 +317,18 @@ const FEATURES: FeatureCard[] = [
   },
   {
     type: 'prompt',
-    promptKey: 'guide-combiner',
-    title: '이모티콘 가이드 조합기',
-    description: '캐릭터·동작·표정·소품 가이드를 조합해 한 컷을 완성하는 프롬프트',
-    icon: <Layers className="h-8 w-8" />,
-  },
-  {
-    type: 'prompt',
     promptKey: 'turnaround',
     title: '캐릭터 턴어라운드 제작하기',
     description: '캐릭터 원본 이미지로 정면·측면·후면 턴어라운드 시트를 만드는 프롬프트',
     icon: <RotateCcw className="h-8 w-8" />,
   },
+  {
+    type: 'prompt',
+    promptKey: 'guide-combiner',
+    title: '이모티콘 가이드 조합기',
+    description: '캐릭터·동작·표정·소품 가이드를 조합해 한 컷을 완성하는 프롬프트',
+    icon: <Layers className="h-8 w-8" />,
+  }
 ];
 
 export default function HomePage() {

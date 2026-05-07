@@ -116,7 +116,6 @@ import jobs from '@/data/keywords/jobs.json';
 import relationships from '@/data/keywords/relationships.json';
 import hobbies from '@/data/keywords/hobbies.json';
 import sports from '@/data/keywords/sports.json';
-import modifiers from '@/data/keywords/modifiers.json';
 import speechStyles from '@/data/keywords/speech-styles.json';
 
 const DATA: RecommendData = {
@@ -125,7 +124,6 @@ const DATA: RecommendData = {
   relationships: relationships as RecommendData['relationships'],
   hobbies: hobbies as RecommendData['hobbies'],
   sports: sports as RecommendData['sports'],
-  modifiers: modifiers as RecommendData['modifiers'],
 };
 
 const LABEL_MAPS = {

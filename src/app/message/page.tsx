@@ -84,7 +84,6 @@ import jobs from '@/data/keywords/jobs.json';
 import relationships from '@/data/keywords/relationships.json';
 import hobbies from '@/data/keywords/hobbies.json';
 import sports from '@/data/keywords/sports.json';
-import modifiers from '@/data/keywords/modifiers.json';
 
 const DATA: RecommendData = {
   personalities: personalities as RecommendData['personalities'],
@@ -92,7 +91,6 @@ const DATA: RecommendData = {
   relationships: relationships as RecommendData['relationships'],
   hobbies: hobbies as RecommendData['hobbies'],
   sports: sports as RecommendData['sports'],
-  modifiers: modifiers as RecommendData['modifiers'],
 };
 
 const LS_KEY = 'emoticon-ai/message-selected-concept';

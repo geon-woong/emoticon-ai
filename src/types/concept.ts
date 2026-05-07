@@ -13,14 +13,6 @@ export type SubjectKey = 'job' | 'relationship' | 'hobby' | 'sport';
 export interface KeywordItem {
   id: string;
   label: string;
-  modifiers?: string[];
-  tone?: 'active' | 'calm';
-}
-
-export interface ModifierPools {
-  skillLevel: string[];
-  intensity: string[];
-  context: string[];
 }
 
 export interface WizardSelection {
@@ -40,7 +32,6 @@ export interface ConceptSuggestion {
   text: string;
   parts: {
     personalityLabel?: string;
-    modifier?: string;
     subjectLabel: string;
   };
   source: 'rule' | 'llm';
