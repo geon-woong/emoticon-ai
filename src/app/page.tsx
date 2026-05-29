@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, User, MessageCircle, Palette, Layers, RotateCcw } from 'lucide-react';
+import { Sparkles, User, MessageCircle, Palette, Layers, RotateCcw, Lock } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { PromptModal } from '@/components/ui/PromptModal';
+import { SecretCodeModal } from '@/components/ui/SecretCodeModal';
+import { useUnlockStore } from '@/stores/unlock-store';
 import { cn } from '@/lib/utils/cn';
 
 const GUIDE_COMBINER_PROMPT = `여러 개의 첨부 이미지를 분석하여,
@@ -333,6 +335,10 @@ const FEATURES: FeatureCard[] = [
 
 export default function HomePage() {
   const [activePrompt, setActivePrompt] = useState<PromptKey | null>(null);
+  const [showSecret, setShowSecret] = useState(false);
+  const unlocked = useUnlockStore((s) => s.unlocked);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <>
@@ -351,13 +357,16 @@ export default function HomePage() {
 
         <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => {
+            const isFree = f.type === 'nav' && f.href === '/concept';
+            const isLocked = !isFree && (!mounted || !unlocked);
+            const cardKey = f.type === 'nav' ? f.href : f.promptKey;
+
             const cardContent = (
               <Card
                 className={cn(
                   'flex h-full flex-col items-center gap-4 p-6 text-center transition',
-                  f.type === 'nav' && !f.enabled
-                    ? 'pointer-events-none opacity-60'
-                    : 'cursor-pointer hover:-translate-y-1 hover:border-brand-selected hover:shadow-md'
+                  'cursor-pointer hover:-translate-y-1 hover:border-brand-selected hover:shadow-md',
+                  isLocked && 'opacity-70'
                 )}
               >
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-selected-bg text-brand-selected">
@@ -365,18 +374,26 @@ export default function HomePage() {
                 </div>
                 <h2 className="text-xl font-bold text-brand-text">{f.title}</h2>
                 <p className="text-sm text-brand-muted">{f.description}</p>
-                {f.type === 'nav' && !f.enabled && (
-                  <span className="rounded-full bg-brand-divider px-3 py-1 text-xs font-bold text-brand-muted">
-                    준비 중
+                {isLocked && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-divider px-3 py-1 text-xs font-bold text-brand-muted">
+                    <Lock className="h-3 w-3" />
+                    잠금
                   </span>
                 )}
-                {/* {f.type === 'prompt' && (
-                  <span className="rounded-full bg-brand-btn1 px-3 py-1 text-xs font-bold text-brand-selected">
-                    프롬프트 제공
-                  </span>
-                )} */}
               </Card>
             );
+
+            if (isLocked) {
+              return (
+                <button
+                  key={cardKey}
+                  className="text-left"
+                  onClick={() => setShowSecret(true)}
+                >
+                  {cardContent}
+                </button>
+              );
+            }
 
             if (f.type === 'prompt') {
               return (
@@ -390,12 +407,10 @@ export default function HomePage() {
               );
             }
 
-            return f.enabled ? (
+            return (
               <Link key={f.href} href={f.href}>
                 {cardContent}
               </Link>
-            ) : (
-              <div key={f.href}>{cardContent}</div>
             );
           })}
         </section>
@@ -407,6 +422,8 @@ export default function HomePage() {
         prompt={activePrompt ? PROMPTS[activePrompt].prompt : ''}
         onClose={() => setActivePrompt(null)}
       />
+
+      <SecretCodeModal open={showSecret} onClose={() => setShowSecret(false)} />
     </>
   );
 }
