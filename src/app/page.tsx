@@ -252,16 +252,21 @@ type PromptKey = 'guide-combiner' | 'turnaround';
 interface PromptConfig {
   title: string;
   prompt: string;
+  description?: string;
 }
 
 const PROMPTS: Record<PromptKey, PromptConfig> = {
   'guide-combiner': {
     title: '이모티콘 가이드 조합기 프롬프트',
     prompt: GUIDE_COMBINER_PROMPT,
+    description:
+      '이모티콘 가이드 조합기는 출력된 캐릭터 이미지와 제공된 가이드 이미지를 AI에 업로드해 사용할 수 있어요',
   },
   turnaround: {
     title: '캐릭터 턴어라운드 제작 프롬프트',
     prompt: TURNAROUND_PROMPT,
+    description:
+      '캐릭터 턴어라운드는 본인 캐릭터 이미지와 제공된 턴어라운드 이미지를 AI에 업로드해 사용할 수 있어요',
   },
 };
 
@@ -301,14 +306,7 @@ const FEATURES: FeatureCard[] = [
     icon: <User className="h-8 w-8" />,
     enabled: true,
   },
-  {
-    type: 'nav',
-    href: '/message',
-    title: '이모티콘 메시지 기획하기',
-    description: '이모티콘에 들어갈 32개 메시지를 기획해요',
-    icon: <MessageCircle className="h-8 w-8" />,
-    enabled: true,
-  },
+
   {
     type: 'nav',
     href: '/design',
@@ -325,12 +323,20 @@ const FEATURES: FeatureCard[] = [
     icon: <RotateCcw className="h-8 w-8" />,
   },
   {
+    type: 'nav',
+    href: '/message',
+    title: '이모티콘 메시지 기획하기',
+    description: '이모티콘에 들어갈 32개 메시지를 기획해요',
+    icon: <MessageCircle className="h-8 w-8" />,
+    enabled: true,
+  },
+  {
     type: 'prompt',
     promptKey: 'guide-combiner',
     title: '이모티콘 가이드 조합기',
     description: '캐릭터·동작·표정·소품 가이드를 조합해 한 컷을 완성하는 프롬프트',
     icon: <Layers className="h-8 w-8" />,
-  }
+  },
 ];
 
 export default function HomePage() {
@@ -344,14 +350,11 @@ export default function HomePage() {
     <>
       <div className="space-y-12">
         <section className="space-y-3 text-center">
-          <h1
-            className="text-5xl text-brand-text"
-            style={{ fontFamily: 'Black Han Sans, sans-serif' }}
-          >
-            이모티콘 AI
+          <h1 className="text-5xl text-brand-text" style={{ fontFamily: 'Black Han Sans, sans-serif' }}>
+            동동작가의 이모티콘 전용 AI
           </h1>
           <p className="text-base text-brand-muted">
-            이모티콘 작가를 위한 기획 도우미. 컨셉, 캐릭터, 메시지를 빠르게 찾아보세요.
+            이모티콘 작업을 위한 컨셉 구상, 캐릭터 디자인, 메시지 기획 등 다양한 기능을 사용 해 보세요.
           </p>
         </section>
 
@@ -366,7 +369,7 @@ export default function HomePage() {
                 className={cn(
                   'flex h-full flex-col items-center gap-4 p-6 text-center transition',
                   'cursor-pointer hover:-translate-y-1 hover:border-brand-selected hover:shadow-md',
-                  isLocked && 'opacity-70'
+                  isLocked && 'opacity-70',
                 )}
               >
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-selected-bg text-brand-selected">
@@ -385,11 +388,7 @@ export default function HomePage() {
 
             if (isLocked) {
               return (
-                <button
-                  key={cardKey}
-                  className="text-left"
-                  onClick={() => setShowSecret(true)}
-                >
+                <button key={cardKey} className="text-left" onClick={() => setShowSecret(true)}>
                   {cardContent}
                 </button>
               );
@@ -397,11 +396,7 @@ export default function HomePage() {
 
             if (f.type === 'prompt') {
               return (
-                <button
-                  key={f.promptKey}
-                  className="text-left"
-                  onClick={() => setActivePrompt(f.promptKey)}
-                >
+                <button key={f.promptKey} className="text-left" onClick={() => setActivePrompt(f.promptKey)}>
                   {cardContent}
                 </button>
               );
@@ -420,6 +415,7 @@ export default function HomePage() {
         open={activePrompt !== null}
         title={activePrompt ? PROMPTS[activePrompt].title : ''}
         prompt={activePrompt ? PROMPTS[activePrompt].prompt : ''}
+        description={activePrompt ? PROMPTS[activePrompt].description : undefined}
         onClose={() => setActivePrompt(null)}
       />
 

@@ -2,12 +2,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   ChevronLeft, ChevronRight, Palette,
-  Circle, PersonStanding, PawPrint,
-  Smile, Zap, Heart,
-  Blend, Ear, Minus, Sparkles, Feather, Square, Hand, Footprints, PenLine,
-  Check, PenSquare,
+  PenLine, Check, PenSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -198,34 +196,46 @@ const CHARACTER_TYPES = [
 ];
 
 const BODY_TYPES = [
-  { id: '일체형', label: '일체형', desc: '머리와 몸통이 하나로 연결된 형태', icon: Circle },
-  { id: '이족보행형', label: '이족보행형', desc: '두 발로 서 있는 구조', icon: PersonStanding },
-  { id: '사족보행형', label: '사족보행형', desc: '네 발로 움직이는 구조', icon: PawPrint },
+  { id: '일체형', label: '일체형', desc: '머리와 몸통이 하나로 연결된 형태', image: '/design/body/integral.png' },
+  { id: '이족보행형', label: '이족보행형', desc: '두 발로 서 있는 구조', image: '/design/body/biped.png' },
+  { id: '사족보행형', label: '사족보행형', desc: '네 발로 움직이는 구조', image: '/design/body/quadruped.png' },
 ];
 
 const DRAWING_STYLES = [
-  { id: '기본형', label: '기본형', desc: '깔끔하고 정돈된 이모티콘 스타일', icon: Smile },
-  { id: 'B급형', label: 'B급형', desc: '유머러스하고 개성 있는 스타일', icon: Zap },
-  { id: '공감형', label: '공감형', desc: '공감 유발 중심의 표정 강조 스타일', icon: Heart },
+  { id: '기본형', label: '기본형', desc: '귀엽고 대중적인 이모티콘 스타일', image: '/design/style/basic.png' },
+  { id: 'B급형', label: 'B급형', desc: '밈, 짤, 낙서처럼 보이는 유머러스한 스타일', image: '/design/style/b-grade.png' },
+  { id: '일러스트형', label: '일러스트형', desc: '풍성하고 디테일한 스타일', image: '/design/style/illustration.png' },
 ];
 
 const FEATURE_OPTIONS = [
-  { id: '동물 무늬', label: '동물 무늬', icon: Blend },
-  { id: '귀무늬', label: '귀무늬', icon: Ear },
-  { id: '눈썹', label: '눈썹', icon: Minus },
-  { id: '볼터치', label: '볼터치', icon: Sparkles },
-  { id: '수염', label: '수염', icon: Feather },
-  { id: '배무늬', label: '배무늬', icon: Square },
-  { id: '손무늬', label: '손무늬', icon: Hand },
-  { id: '발무늬', label: '발무늬', icon: Footprints },
+  { id: '동물 무늬', label: '동물 무늬' },
+  { id: '귀무늬', label: '귀무늬' },
+  { id: '눈썹', label: '눈썹' },
+  { id: '볼터치', label: '볼터치' },
+  { id: '수염', label: '수염' },
+  { id: '배무늬', label: '배무늬' },
+  { id: '손무늬', label: '손무늬' },
+  { id: '발무늬', label: '발무늬' },
+];
+
+// 가이드 이미지 위에 라벨을 얹을 위치(부위 좌표, %). side는 텍스트가 놓일 방향.
+// 이미지가 바뀌면 x/y만 조정하면 된다.
+type GuideSide = 'left' | 'right';
+const FEATURE_GUIDE_LABELS: { label: string; x: number; y: number; side: GuideSide }[] = [
+  { label: '동물 무늬', x: 46, y: 20, side: 'left' },
+  { label: '귀무늬', x: 60, y: 18, side: 'right' },
+  { label: '볼터치', x: 66, y: 47, side: 'right' },
+  { label: '배무늬', x: 43, y: 70, side: 'left' },
+  { label: '손무늬', x: 70, y: 66, side: 'right' },
+  { label: '발무늬', x: 40, y: 86, side: 'left' },
 ];
 
 const COLOR_OPTIONS = [
-  { id: '파스텔톤', label: '파스텔톤', color: '#FFD6E7' },
-  { id: '비비드톤', label: '비비드톤', color: '#FF3B30' },
-  { id: '모노톤', label: '모노톤', color: '#8E8E93' },
-  { id: '네온톤', label: '네온톤', color: '#39FF14' },
-  { id: '팝컬러톤', label: '팝컬러톤', color: '#FFD60A' },
+  { id: '파스텔톤', label: '파스텔톤', image: '/design/color/pastel.png' },
+  { id: '비비드톤', label: '비비드톤', image: '/design/color/vivid.png' },
+  { id: '모노톤', label: '모노톤', image: '/design/color/mono.png' },
+  { id: '네온톤', label: '네온톤', image: '/design/color/neon.png' },
+  { id: '소프트톤', label: '소프트톤', image: '/design/color/soft.png' },
 ];
 
 const STEP_LABELS = ['컨셉 선택', '캐릭터 주체', '캐릭터 구조', '그림체 스타일', '개성 요소', '색감'];
@@ -235,8 +245,11 @@ const TOTAL_STEPS = 6;
 
 function hasMinimumSelection(s: WizardSelection): boolean {
   return (
-    s.personalities.length > 0 &&
-    (s.jobs.length > 0 || s.relationships.length > 0 || s.hobbies.length > 0 || s.sports.length > 0)
+    (s.personalities?.length ?? 0) > 0 &&
+    ((s.jobs?.length ?? 0) > 0 ||
+      (s.relationships?.length ?? 0) > 0 ||
+      (s.hobbies?.length ?? 0) > 0 ||
+      (s.sports?.length ?? 0) > 0)
   );
 }
 
@@ -491,7 +504,7 @@ export default function DesignPage() {
         title="캐릭터 디자인 프롬프트"
         subtitle={state.concept ? `컨셉: ${state.concept.text}` : undefined}
         description={<>
-          아래 프롬프트를 복사한 후 ChatGPT 또는 Gemini에 붙여넣으세요.
+          아래 프롬프트를 복사한 후 ChatGPT에 붙여넣으세요.
           <br />
           <span className="font-medium text-brand-text">러프 스케치 이미지가 있다면 함께 첨부</span>하면 더 정확한 결과를 얻을 수 있어요.
         </>}
@@ -607,7 +620,7 @@ function StepBodyType({
     <div className="space-y-4">
       <p className="text-sm text-brand-muted">캐릭터의 기본 구조를 선택해주세요.</p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {BODY_TYPES.map(({ id, label, desc, icon: Icon }) => (
+        {BODY_TYPES.map(({ id, label, desc, image }) => (
           <button
             key={id}
             type="button"
@@ -620,10 +633,10 @@ function StepBodyType({
             )}
           >
             <div className={cn(
-              'flex h-16 w-16 items-center justify-center rounded-full',
-              selected === id ? 'bg-brand-selected text-white' : 'bg-brand-selected-bg text-brand-selected'
+              'relative h-16 w-16 overflow-hidden rounded-full',
+              selected === id ? 'ring-2 ring-brand-selected' : 'bg-brand-selected-bg'
             )}>
-              <Icon className="h-8 w-8" />
+              <Image src={image} alt={label} fill sizes="64px" className="object-cover" />
             </div>
             <p className="font-bold text-brand-text">{label}</p>
             <p className="text-xs text-brand-muted">{desc}</p>
@@ -645,7 +658,7 @@ function StepDrawingStyle({
     <div className="space-y-4">
       <p className="text-sm text-brand-muted">그림체 스타일을 선택해주세요.</p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {DRAWING_STYLES.map(({ id, label, desc, icon: Icon }) => (
+        {DRAWING_STYLES.map(({ id, label, desc, image }) => (
           <button
             key={id}
             type="button"
@@ -658,10 +671,10 @@ function StepDrawingStyle({
             )}
           >
             <div className={cn(
-              'flex h-16 w-16 items-center justify-center rounded-full',
-              selected === id ? 'bg-brand-selected text-white' : 'bg-brand-selected-bg text-brand-selected'
+              'relative h-16 w-16 overflow-hidden rounded-full',
+              selected === id ? 'ring-2 ring-brand-selected' : 'bg-brand-selected-bg'
             )}>
-              <Icon className="h-8 w-8" />
+              <Image src={image} alt={label} fill sizes="64px" className="object-cover" />
             </div>
             <p className="font-bold text-brand-text">{label}</p>
             <p className="text-xs text-brand-muted">{desc}</p>
@@ -692,7 +705,7 @@ function StepFeatures({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-brand-muted">개성 요소를 선택해주세요. (최대 3개)</p>
+        <p className="text-sm text-brand-muted">택해주세요. (최대 3개)</p>
         <span className={cn(
           'text-sm font-bold',
           totalCount >= 3 ? 'text-brand-selected' : 'text-brand-muted'
@@ -700,8 +713,38 @@ function StepFeatures({
           {totalCount} / 3
         </span>
       </div>
+      <div className="flex w-full justify-center rounded-2xl border border-brand-divider bg-white py-6">
+        <div className="relative aspect-3/2 w-full max-w-md overflow-hidden">
+          <Image
+            src="/design/feature/guide.png"
+            alt="개성 요소 가이드"
+            fill
+            sizes="(min-width: 640px) 448px, 100vw"
+            className="object-contain"
+          />
+          {FEATURE_GUIDE_LABELS.map(({ label, x, y, side }) => (
+            <div
+              key={label}
+              className={cn(
+                'absolute flex -translate-y-1/2 items-center gap-1',
+                side === 'left' ? 'left-0 flex-row' : 'right-0 flex-row-reverse'
+              )}
+              style={{
+                top: `${y}%`,
+                width: side === 'left' ? `${x}%` : `${100 - x}%`,
+              }}
+            >
+              <span className="whitespace-nowrap rounded-md bg-white/80 px-1.5 py-0.5 text-xs font-bold text-brand-text sm:text-sm">
+                {label}
+              </span>
+              <span className="h-px flex-1 bg-amber-500" />
+              <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {FEATURE_OPTIONS.map(({ id, label, icon: Icon }) => {
+        {FEATURE_OPTIONS.map(({ id, label }) => {
           const isSelected = features.includes(id);
           const isDisabled = !isSelected && totalCount >= 3;
           return (
@@ -711,7 +754,7 @@ function StepFeatures({
               onClick={() => onToggle(id)}
               disabled={isDisabled}
               className={cn(
-                'rounded-2xl border px-4 py-3 flex items-center gap-2 transition',
+                'rounded-2xl border px-4 py-3 text-center text-sm font-medium transition',
                 isSelected
                   ? 'border-brand-selected ring-2 ring-brand-selected bg-brand-selected-bg/30 text-brand-selected'
                   : isDisabled
@@ -719,8 +762,7 @@ function StepFeatures({
                     : 'border-brand-divider bg-brand-card text-brand-text hover:border-brand-selected/50'
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className="text-sm font-medium">{label}</span>
+              {label}
             </button>
           );
         })}
@@ -731,7 +773,7 @@ function StepFeatures({
           onClick={onToggleCustom}
           disabled={!hasCustom && totalCount >= 3}
           className={cn(
-            'rounded-2xl border px-4 py-3 flex items-center gap-2 transition',
+            'rounded-2xl border px-4 py-3 text-center text-sm font-medium transition',
             hasCustom
               ? 'border-brand-selected ring-2 ring-brand-selected bg-brand-selected-bg/30 text-brand-selected'
               : !hasCustom && totalCount >= 3
@@ -739,8 +781,7 @@ function StepFeatures({
                 : 'border-brand-divider bg-brand-card text-brand-text hover:border-brand-selected/50'
           )}
         >
-          <PenLine className="h-4 w-4 shrink-0" />
-          <span className="text-sm font-medium">직접 입력</span>
+          직접 입력
         </button>
       </div>
 
@@ -772,7 +813,7 @@ function StepColorStyle({
     <div className="space-y-4">
       <p className="text-sm text-brand-muted">캐릭터의 색감 톤을 선택해주세요.</p>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {COLOR_OPTIONS.map(({ id, label, color }) => (
+        {COLOR_OPTIONS.map(({ id, label, image }) => (
           <button
             key={id}
             type="button"
@@ -784,10 +825,9 @@ function StepColorStyle({
                 : 'border-brand-divider bg-brand-card hover:border-brand-selected/50'
             )}
           >
-            <div
-              className="h-12 w-12 rounded-full border border-brand-divider shadow-sm"
-              style={{ backgroundColor: color }}
-            />
+            <div className="relative h-12 w-12 overflow-hidden">
+              <Image src={image} alt={label} fill sizes="48px" className="object-contain" />
+            </div>
             <span className="text-sm font-medium text-brand-text">{label}</span>
           </button>
         ))}

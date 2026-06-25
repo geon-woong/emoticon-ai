@@ -295,7 +295,7 @@ export default function CharacterPage() {
         onClose={() => setShowModal(false)}
         title="캐릭터 주체 찾기"
         subtitle={selectedConcept ? `선택한 컨셉: ${selectedConcept.text}` : undefined}
-        description="아래 프롬프트를 복사한 후, ChatGPT 또는 Gemini에 붙여넣어 캐릭터 주체를 추천받아보세요."
+        description="아래 프롬프트를 복사한 후, ChatGPT에 붙여넣어 캐릭터 주체를 추천받아보세요."
         prompt={selectedConcept ? buildCharacterSubjectPrompt({
           age: LABEL_MAPS.age.get(selection.age ?? '') ?? selection.age ?? '',
           gender: LABEL_MAPS.gender.get(selection.gender ?? '') ?? selection.gender ?? '',

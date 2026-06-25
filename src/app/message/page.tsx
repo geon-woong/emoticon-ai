@@ -239,7 +239,7 @@ export default function MessagePage() {
         title="이모티콘 메시지 기획하기"
         subtitle={selectedConcept ? `선택한 컨셉: ${selectedConcept.text}` : undefined}
         description={<>
-          아래 프롬프트를 복사한 후, ChatGPT 또는 Gemini에 붙여넣으세요.
+          아래 프롬프트를 복사한 후, ChatGPT에 붙여넣으세요.
           <br />
           <span className="font-medium text-brand-text">컨셉은 자동으로 입력</span>되어 있으며,
           나머지 항목은 내 캐릭터에 맞게 직접 채워주세요.

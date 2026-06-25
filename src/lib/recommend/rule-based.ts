@@ -36,14 +36,14 @@ export function recommendConcepts(
   const rng = createSeededRng(options.seed ?? Date.now());
 
   const subjects: ReadonlyArray<readonly [SubjectKey, string[], KeywordItem[]]> = [
-    ['job', selection.jobs, data.jobs],
-    ['relationship', selection.relationships, data.relationships],
-    ['hobby', selection.hobbies, data.hobbies],
-    ['sport', selection.sports, data.sports],
+    ['job', selection.jobs ?? [], data.jobs],
+    ['relationship', selection.relationships ?? [], data.relationships],
+    ['hobby', selection.hobbies ?? [], data.hobbies],
+    ['sport', selection.sports ?? [], data.sports],
   ];
 
   const personalityItems = data.personalities.filter((p) =>
-    selection.personalities.includes(p.id)
+    (selection.personalities ?? []).includes(p.id)
   );
 
   const result: RecommendResult = { bySubject: {} };
