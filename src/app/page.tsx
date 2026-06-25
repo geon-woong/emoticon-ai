@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { PromptModal } from '@/components/ui/PromptModal';
 import { SecretCodeModal } from '@/components/ui/SecretCodeModal';
 import { useUnlockStore } from '@/stores/unlock-store';
+import { useConceptWizardStore } from '@/stores/concept-wizard-store';
 import { cn } from '@/lib/utils/cn';
 
 const GUIDE_COMBINER_PROMPT = `여러 개의 첨부 이미지를 분석하여,
@@ -343,6 +344,7 @@ export default function HomePage() {
   const [activePrompt, setActivePrompt] = useState<PromptKey | null>(null);
   const [showSecret, setShowSecret] = useState(false);
   const unlocked = useUnlockStore((s) => s.unlocked);
+  const setStep = useConceptWizardStore((s) => s.setStep);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -403,7 +405,11 @@ export default function HomePage() {
             }
 
             return (
-              <Link key={f.href} href={f.href}>
+              <Link
+                key={f.href}
+                href={f.href}
+                onClick={f.href === '/concept' ? () => setStep(0) : undefined}
+              >
                 {cardContent}
               </Link>
             );
