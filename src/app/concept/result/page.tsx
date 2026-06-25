@@ -202,17 +202,15 @@ export default function ConceptResultPage() {
           className="inline-flex items-center gap-1 text-sm text-brand-muted hover:text-brand-text"
         >
           <ChevronLeft className="h-4 w-4" />
-          위저드로 돌아가기
+          이전단계로 돌아가기
         </button>
         <h1 className="text-3xl font-bold text-brand-text">추천 컨셉</h1>
         <p className="text-sm text-brand-muted">
-          {LABEL_MAPS.age.get(selection.age ?? '')} ·{' '}
-          {LABEL_MAPS.gender.get(selection.gender ?? '')} · 성격: {personalityLabels}
+          {LABEL_MAPS.age.get(selection.age ?? '')} · {LABEL_MAPS.gender.get(selection.gender ?? '')} · 성격:{' '}
+          {personalityLabels}
           {selection.speechStyle && ` · 말투: ${LABEL_MAPS.speechStyle.get(selection.speechStyle)}`}
         </p>
-        <p className="text-sm text-brand-selected font-medium">
-          컨셉을 하나 선택한 후 구체화할 수 있어요.
-        </p>
+        <p className="text-sm text-brand-selected font-medium">컨셉을 하나 선택한 후 구체화할 수 있어요.</p>
       </header>
 
       <ConceptResultGrid
@@ -222,10 +220,7 @@ export default function ConceptResultPage() {
       />
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-        <Button
-          onClick={() => setShowModal(true)}
-          disabled={!selectedConcept}
-        >
+        <Button onClick={() => setShowModal(true)} disabled={!selectedConcept}>
           <ArrowRight className="h-5 w-5" />
           컨셉 구체화 하러가기
         </Button>
@@ -239,18 +234,13 @@ export default function ConceptResultPage() {
           <RotateCcw className="h-4 w-4" />
           처음부터 다시
         </Button>
-        <Button
-          variant="secondary"
-          onClick={() => router.push('/')}
-        >
+        <Button variant="secondary" onClick={() => router.push('/')}>
           <Home className="h-4 w-4" />
           메인화면
         </Button>
       </div>
 
-      <p className="text-center text-xs text-brand-muted">
-        선택한 컨셉은 자동으로 저장됩니다.
-      </p>
+      <p className="text-center text-xs text-brand-muted">선택한 컨셉은 자동으로 저장됩니다.</p>
 
       <PromptModal
         open={showModal && selectedConcept !== null}
@@ -258,13 +248,20 @@ export default function ConceptResultPage() {
         title="컨셉 구체화하기"
         subtitle={selectedConcept ? `선택한 컨셉: ${selectedConcept.text}` : undefined}
         description="아래 프롬프트를 복사한 후, ChatGPT에 붙여넣어 컨셉을 구체화해보세요."
-        prompt={selectedConcept ? buildConceptDetailPrompt({
-          age: LABEL_MAPS.age.get(selection.age ?? '') ?? selection.age ?? '',
-          gender: LABEL_MAPS.gender.get(selection.gender ?? '') ?? selection.gender ?? '',
-          personality: selection.personalities.map((id) => LABEL_MAPS.personality.get(id)).filter(Boolean).join(', '),
-          speechStyle: LABEL_MAPS.speechStyle.get(selection.speechStyle ?? '') ?? '없음',
-          concept: selectedConcept.text,
-        }) : ''}
+        prompt={
+          selectedConcept
+            ? buildConceptDetailPrompt({
+                age: LABEL_MAPS.age.get(selection.age ?? '') ?? selection.age ?? '',
+                gender: LABEL_MAPS.gender.get(selection.gender ?? '') ?? selection.gender ?? '',
+                personality: selection.personalities
+                  .map((id) => LABEL_MAPS.personality.get(id))
+                  .filter(Boolean)
+                  .join(', '),
+                speechStyle: LABEL_MAPS.speechStyle.get(selection.speechStyle ?? '') ?? '없음',
+                concept: selectedConcept.text,
+              })
+            : ''
+        }
       />
     </div>
   );
