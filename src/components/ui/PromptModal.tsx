@@ -15,7 +15,7 @@ interface Props {
 }
 
 const CHATGPT_URL =
-  'https://chatgpt.com/g/g-6a258d5bd3e88191952cb27a63a3f0cb-dongdongjagga-ddalggag-mandeuneun-imotikon-jejag-koci';
+  'https://chatgpt.com/';
 
 export function PromptModal({ open, onClose, title, subtitle, description, prompt }: Props) {
   const [copied, setCopied] = useState(false);
