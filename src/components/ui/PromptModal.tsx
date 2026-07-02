@@ -85,7 +85,7 @@ export function PromptModal({ open, onClose, title, subtitle, description, promp
                 className="inline-flex flex-1 justify-center items-center gap-2 rounded-2xl bg-[#10a37f] px-5 py-3 text-white transition hover:brightness-110"
               >
                 <span className="flex flex-col leading-tight">
-                  <span className="text-xs font-normal opacity-90">이모티콘 전용</span>
+                  {/* <span className="text-xs font-normal opacity-90">이모티콘 전용</span> */}
                   <span className="text-base font-bold">ChatGPT 바로가기</span>
                 </span>
                 <ExternalLink className="h-4 w-4" />
