@@ -1,4 +1,5 @@
 import type { WizardSelection } from '@/types/concept';
+import { customLabel, isCustomId } from '@/lib/concept/custom-id';
 
 import ages from '@/data/keywords/ages.json';
 import genders from '@/data/keywords/genders.json';
@@ -50,27 +51,30 @@ export function buildConceptPrompt(
   selection: WizardSelection,
   excludeTexts: string[] = []
 ): { system: string; user: string } {
-  const ageLabel = selection.age ? MAPS.age.get(selection.age) : null;
-  const genderLabel = selection.gender ? MAPS.gender.get(selection.gender) : null;
+  const resolve = (id: string, map: Map<string, string>): string | undefined =>
+    isCustomId(id) ? customLabel(id) : map.get(id);
+
+  const ageLabel = selection.age ? resolve(selection.age, MAPS.age) : null;
+  const genderLabel = selection.gender ? resolve(selection.gender, MAPS.gender) : null;
   const personalityLabels = selection.personalities
-    .map((id) => MAPS.personality.get(id))
+    .map((id) => resolve(id, MAPS.personality))
     .filter((x): x is string => Boolean(x));
 
   const subjects: { key: string; labels: string[] }[] = [];
   if (selection.jobs.length > 0) {
-    const labels = selection.jobs.map((id) => MAPS.job.get(id)).filter((x): x is string => Boolean(x));
+    const labels = selection.jobs.map((id) => resolve(id, MAPS.job)).filter((x): x is string => Boolean(x));
     if (labels.length > 0) subjects.push({ key: '직업', labels });
   }
   if (selection.relationships.length > 0) {
-    const labels = selection.relationships.map((id) => MAPS.relationship.get(id)).filter((x): x is string => Boolean(x));
+    const labels = selection.relationships.map((id) => resolve(id, MAPS.relationship)).filter((x): x is string => Boolean(x));
     if (labels.length > 0) subjects.push({ key: '관계', labels });
   }
   if (selection.hobbies.length > 0) {
-    const labels = selection.hobbies.map((id) => MAPS.hobby.get(id)).filter((x): x is string => Boolean(x));
+    const labels = selection.hobbies.map((id) => resolve(id, MAPS.hobby)).filter((x): x is string => Boolean(x));
     if (labels.length > 0) subjects.push({ key: '취미', labels });
   }
   if (selection.sports.length > 0) {
-    const labels = selection.sports.map((id) => MAPS.sport.get(id)).filter((x): x is string => Boolean(x));
+    const labels = selection.sports.map((id) => resolve(id, MAPS.sport)).filter((x): x is string => Boolean(x));
     if (labels.length > 0) subjects.push({ key: '운동', labels });
   }
 

@@ -21,7 +21,7 @@ const STEP_DATA: Record<WizardStepId, { items: KeywordItem[]; description: strin
   gender: { items: genders as KeywordItem[], description: '성별을 골라주세요' },
   personality: {
     items: personalities as KeywordItem[],
-    description: '성격을 골라주세요 (여러 개 선택 가능)',
+    description: '성격을 골라주세요 (최대 10개)',
   },
   job: { items: jobs as KeywordItem[], description: '직업을 골라주세요 (최대 3개)' },
   relationship: { items: relationships as KeywordItem[], description: '관계를 골라주세요 (최대 3개)' },
@@ -56,6 +56,14 @@ const MULTI_KEY_MAP: Record<MultiStepId, 'personalities' | 'jobs' | 'relationshi
   sport: 'sports',
 };
 
+const MULTI_MAX: Record<MultiStepId, number> = {
+  personality: 10,
+  job: 3,
+  relationship: 3,
+  hobby: 3,
+  sport: 3,
+};
+
 export function ConceptWizard() {
   const router = useRouter();
   const currentStep = useConceptWizardStore((s) => s.currentStep);
@@ -81,9 +89,11 @@ export function ConceptWizard() {
 
   const canGoNext = selectedIds.length > 0;
 
+  const multiMax = isMulti ? MULTI_MAX[step.id as MultiStepId] : 0;
+
   const handleToggle = (id: string) => {
     if (isMulti) {
-      toggleMulti(MULTI_KEY_MAP[step.id as MultiStepId], id);
+      toggleMulti(MULTI_KEY_MAP[step.id as MultiStepId], id, multiMax);
     } else {
       setSingle(SINGLE_KEY_MAP[step.id as SingleStepId], id);
     }
@@ -110,7 +120,8 @@ export function ConceptWizard() {
         mode={step.mode}
         selectedIds={selectedIds}
         onToggle={handleToggle}
-        maxReached={isMulti && selectedIds.length >= 3}
+        maxReached={isMulti && selectedIds.length >= multiMax}
+        allowCustom={step.id !== 'age' && step.id !== 'gender'}
       />
       <WizardNav
         canGoBack={currentStep > 0}

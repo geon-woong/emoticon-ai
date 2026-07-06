@@ -67,5 +67,8 @@
   { "id": "flight_attendant", "label": "승무원" },
   { "id": "travel_guide", "label": "여행가이드" },
   { "id": "pet_sitter", "label": "펫시터" },
-  { "id": "animal_trainer", "label": "반려동물훈련사" }
+  { "id": "animal_trainer", "label": "반려동물훈련사" },
+  { "id": "homemaker", "label": "주부" },
+  { "id": "middle_schooler", "label": "중학생" },
+  { "id": "high_schooler", "label": "고등학생" }
 ]

@@ -5,6 +5,7 @@ import type {
   SubjectKey,
   WizardSelection,
 } from '@/types/concept';
+import { customLabel, isCustomId } from '@/lib/concept/custom-id';
 
 export interface RecommendData {
   personalities: KeywordItem[];
@@ -42,9 +43,13 @@ export function recommendConcepts(
     ['sport', selection.sports ?? [], data.sports],
   ];
 
-  const personalityItems = data.personalities.filter((p) =>
-    (selection.personalities ?? []).includes(p.id)
-  );
+  const personalityItems = (selection.personalities ?? [])
+    .map((id) =>
+      isCustomId(id)
+        ? { id, label: customLabel(id) }
+        : data.personalities.find((p) => p.id === id)
+    )
+    .filter((x): x is KeywordItem => Boolean(x));
 
   const result: RecommendResult = { bySubject: {} };
 
@@ -54,7 +59,9 @@ export function recommendConcepts(
     const allConcepts: ConceptSuggestion[] = [];
 
     for (const selectedId of selectedIds) {
-      const subjectItem = pool.find((p) => p.id === selectedId);
+      const subjectItem = isCustomId(selectedId)
+        ? { id: selectedId, label: customLabel(selectedId) }
+        : pool.find((p) => p.id === selectedId);
       if (!subjectItem) continue;
 
       const itemCount = options.perSubject ?? 1;

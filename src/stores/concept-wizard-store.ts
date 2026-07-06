@@ -38,7 +38,7 @@ interface ConceptWizardState {
   next: () => void;
   prev: () => void;
   setSingle: <K extends SingleKey>(key: K, value: string) => void;
-  toggleMulti: (key: MultiKey, id: string) => void;
+  toggleMulti: (key: MultiKey, id: string, max?: number) => void;
   reset: () => void;
 }
 
@@ -54,13 +54,13 @@ export const useConceptWizardStore = create<ConceptWizardState>()(
         set((s) => ({ currentStep: Math.max(s.currentStep - 1, 0) })),
       setSingle: (key, value) =>
         set((s) => ({ selection: { ...s.selection, [key]: value } })),
-      toggleMulti: (key, id) =>
+      toggleMulti: (key, id, max) =>
         set((s) => {
           const arr = s.selection[key] as string[];
           if (arr.includes(id)) {
             return { selection: { ...s.selection, [key]: arr.filter((x) => x !== id) } };
           }
-          if (arr.length >= 3) return s;
+          if (arr.length >= (max ?? 3)) return s;
           return { selection: { ...s.selection, [key]: [...arr, id] } };
         }),
       reset: () => set({ currentStep: 0, selection: initialSelection }),
